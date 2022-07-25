@@ -50,9 +50,9 @@ public class Screen extends JPanel {
                 if (!file.getName().toLowerCase().endsWith(".jar")) name = file.getName();
                 else name = file.getName().substring(0, file.getName().length() - 4);
                 chooser.setSelectedFile(null);
+                chooser.setCurrentDirectory(null);
                 chooser.resetChoosableFileFilters();
                 chooser.setFileHidingEnabled(false);
-                chooser.setCurrentDirectory(null);
                 chooser.setDialogTitle("Select the running directory");
                 chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
                 if (chooser.showOpenDialog(this) == 0) {
