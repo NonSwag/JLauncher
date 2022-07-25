@@ -1,0 +1,7 @@
+{
+  "font": {
+    "type": "Ubuntu",
+    "size": 13
+  },
+  "appearance": "com.github.weisj.darklaf.theme.laf.OneDarkThemeDarklafLookAndFeel"
+}
