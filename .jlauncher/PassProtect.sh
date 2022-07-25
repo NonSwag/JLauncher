@@ -1,1 +1,1 @@
-java -jar /home/david/Desktop/Coding/PassProtect/PassProtect.jar install
+java -jar /home/david/Desktop/Coding/PassProtect/PassProtect.jar start

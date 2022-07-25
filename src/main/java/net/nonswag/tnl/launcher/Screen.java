@@ -1,6 +1,5 @@
 package net.nonswag.tnl.launcher;
 
-import net.nonswag.tnl.core.utils.LinuxUtil;
 import net.nonswag.tnl.launcher.desktop.Desktop;
 import net.nonswag.tnl.launcher.desktop.DesktopEntry;
 import net.nonswag.tnl.launcher.images.ImageAspect;
@@ -50,7 +49,15 @@ public class Screen extends JPanel {
                 String name;
                 if (!file.getName().toLowerCase().endsWith(".jar")) name = file.getName();
                 else name = file.getName().substring(0, file.getName().length() - 4);
-                DESKTOP.put(selected, new DesktopEntry(name, file));
+                chooser.setSelectedFile(null);
+                chooser.resetChoosableFileFilters();
+                chooser.setFileHidingEnabled(false);
+                chooser.setCurrentDirectory(null);
+                chooser.setDialogTitle("Select the running directory");
+                chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                if (chooser.showOpenDialog(this) == 0) {
+                    DESKTOP.put(selected, new DesktopEntry(name, file, chooser.getSelectedFile()).editShellFile());
+                }
             }
             repaint();
         } catch (Exception e) {
@@ -75,9 +82,7 @@ public class Screen extends JPanel {
         else repaint();
     }, EDIT_ENTRY = () -> {
         DesktopEntry entry = DESKTOP.get(selected);
-        if (entry != null) {
-            LinuxUtil.Suppressed.runShellCommand("gedit %s".formatted(entry.getShellFile().getFile().getAbsolutePath()));
-        }
+        if (entry != null) entry.editShellFile();
         repaint();
     };
 

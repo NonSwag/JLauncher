@@ -38,11 +38,13 @@ public class Desktop extends TreeMap<Integer, DesktopEntry> {
         if (!object.has("index")) throw new NullPointerException("index not defined");
         if (!object.has("name")) throw new NullPointerException("name not defined");
         if (!object.has("icon")) throw new NullPointerException("icon not defined");
+        if (!object.has("running-directory")) throw new NullPointerException("running-directory not defined");
+        int index = object.get("index").getAsInt();
         String name = object.get("name").getAsString();
         String icon = object.get("icon").getAsString();
         File file = new File(object.get("file").getAsString());
-        int index = object.get("index").getAsInt();
-        return new Pair<>(index, new DesktopEntry(name, icon, file));
+        File runningDirectory = new File(object.get("running-directory").getAsString());
+        return new Pair<>(index, new DesktopEntry(name, icon, file, runningDirectory));
     }
 
     public void save() {
@@ -53,6 +55,7 @@ public class Desktop extends TreeMap<Integer, DesktopEntry> {
             object.addProperty("name", entry.getName());
             object.addProperty("icon", entry.getIcon());
             object.addProperty("file", entry.getFile().getAbsolutePath());
+            object.addProperty("running-directory", entry.getRunningDirectory().getAbsolutePath());
             array.add(object);
         });
         FILE.setJsonElement(array);

@@ -24,18 +24,19 @@ public class DesktopEntry {
     @Nonnull
     private String name, icon;
     @Nonnull
-    private File file;
+    private File file, runningDirectory;
     @Nonnull
     private final ShellFile shellFile;
 
-    public DesktopEntry(@Nonnull String name, @Nonnull File file) throws FileNotFoundException {
-        this(name, "default.png", file);
+    public DesktopEntry(@Nonnull String name, @Nonnull File file, @Nonnull File runningDirectory) throws FileNotFoundException {
+        this(name, "default.png", file, runningDirectory);
     }
 
-    public DesktopEntry(@Nonnull String name, @Nonnull String icon, @Nonnull File file) throws FileNotFoundException {
+    public DesktopEntry(@Nonnull String name, @Nonnull String icon, @Nonnull File file, @Nonnull File runningDirectory) throws FileNotFoundException {
         try {
             this.name = name;
             this.file = file;
+            this.runningDirectory = runningDirectory;
             this.shellFile = new ShellFile(".jlauncher", "%s.sh".formatted(name)) {{
                 String command = "java -jar %s".formatted(file.getAbsolutePath());
                 if (getContent().length == 0) setContent(new String[]{command}).save();
@@ -56,6 +57,13 @@ public class DesktopEntry {
 
     public void launch() throws Exception {
         if (!getFile().exists()) throw new FileNotFoundException("File not found");
-        LinuxUtil.runShellCommand("/bin/bash %s".formatted(getShellFile().getFile().getAbsolutePath()));
+        File directory = getRunningDirectory().getAbsoluteFile();
+        LinuxUtil.runShellCommand("/bin/bash %s".formatted(getShellFile().getFile().getAbsolutePath()), directory);
+    }
+
+    @Nonnull
+    public DesktopEntry editShellFile() {
+        LinuxUtil.Suppressed.runShellCommand("gedit %s".formatted(getShellFile().getFile().getAbsolutePath()));
+        return this;
     }
 }
